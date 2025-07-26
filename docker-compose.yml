@@ -1,0 +1,51 @@
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: evolution_mysql
+    restart: always
+    command: --sql-mode=""
+    env_file:
+      - .env  # Carga las variables desde el archivo .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - evolution_mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:6.2
+    container_name: evolution_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --requirepass secret
+    env_file:
+      - .env  # ← Carga las variables del archivo .env
+    volumes:
+      - redis_data:/data
+
+  evolution-api:
+    image: atendai/evolution-api:v2.1.1
+    container_name: evolution_api
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./instances:/evolution/instances
+volumes:
+  redis_data:
+  evolution_mysql_data:
