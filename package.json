@@ -1,0 +1,15 @@
+{
+  "name": "evolution-api",
+  "version": "1.0.0",
+  "scripts": {
+    "prisma:generate": "npx prisma generate --schema=./prisma/mysql-schema.prisma",
+    "prisma:push": "npx prisma db push --schema=./prisma/mysql-schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=./prisma/mysql-schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.1"
+  }
+}
